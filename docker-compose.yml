@@ -1,0 +1,40 @@
+version: '3.5'
+
+services:
+  test_postgres:
+    container_name: test_postgres
+    image: postgres:14
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      PGDATA: /data/postgres
+    volumes:
+       - postgres:/docker-volumes/postgres
+    ports:
+      - 127.0.0.1:5432:5432
+    networks:
+      - test
+    restart: unless-stopped
+
+  test_pgadmin:
+    container_name: test_pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@admin.com
+      PGADMIN_DEFAULT_PASSWORD: test
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+       - pgadmin:/docker-volumes/pgadmin
+    ports:
+      - 127.0.0.1:5050:80
+    networks:
+      - test
+    restart: unless-stopped
+
+networks:
+  test:
+    driver: bridge
+
+volumes:
+  postgres:
+  pgadmin:
